@@ -1,0 +1,6 @@
+# Use tabs for indentation, for accessibility among other reasons
+# Refs:
+# https://github.com/rust-lang/rfcs/issues/3003
+# https://github.com/rust-lang/rustfmt/issues/4067#issuecomment-685961408
+# https://old.reddit.com/r/javascript/comments/c8drjo/nobody_talks_about_the_real_reason_to_use_tabs/
+hard_tabs = true

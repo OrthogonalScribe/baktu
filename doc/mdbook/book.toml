@@ -1,0 +1,50 @@
+[book]
+authors = ["OrthogonalScribe"]
+language = "en"
+multilingual = false
+src = "src"
+title = "baktu Documentation"
+description = "Linux backup tool to create and browse incremental file-level deduplicated ext4 snapshots in ext4 repositories. Inspired by rsnapshot."
+
+# Third party plugins via https://github.com/rust-lang/mdBook/wiki/Third-party-plugins
+
+[preprocessor.pagetoc]
+# https://github.com/slowsage/mdbook-pagetoc
+# install via `cargo install mdbook-pagetoc`
+
+[output.html]
+mathjax-support = true
+additional-css = ["theme/pagetoc.css"]
+additional-js  = ["theme/pagetoc.js"]
+
+default-theme = "rust"
+preferred-dark-theme = "ayu"
+
+# TODO from https://rust-lang.github.io/mdBook/format/configuration/renderers.html#html-renderer-options
+#git-repository-url
+#git-repository-icon: fa-code-fork if not using GH
+#site-url
+#cname for GH pages
+
+[output.linkcheck]
+# https://github.com/Michael-F-Bryan/mdbook-linkcheck
+# install via `cargo install mdbook-linkcheck`
+
+# Should we check links on the internet? Enabling this option adds a
+# non-negligible performance impact
+# Currently makes the build take 90 seconds the first time
+follow-web-links = true
+
+# The User-Agent to use when sending web requests
+user-agent = "mdbook-linkcheck-0.4.0"
+
+# The number of seconds a cached result is valid for (12 hrs by default)
+cache-timeout = 43200
+
+# How should warnings be treated?
+#
+# - "warn" will emit warning messages
+# - "error" treats all warnings as errors, failing the linkcheck
+# - "ignore" will ignore warnings, suppressing diagnostic messages and allowing
+#   the linkcheck to continuing
+warning-policy = "warn"

@@ -1,0 +1,10 @@
+[exclude]
+# Exclude CACHEDIR.TAG-marked directories (see https://bford.info/cachedir/ )
+cachedir_tag = false
+
+# Exclude files with the nodump attribute (see chattr(1))
+nodump = false
+
+# Exclude all paths that result in EACCES due to lack of permissions.
+# Requires the --confirm-exclude-all-eacces flag when running
+all_eacces = false

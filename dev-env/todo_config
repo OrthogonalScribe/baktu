@@ -1,0 +1,5 @@
+# Configuration file for https://crates.io/crates/cargo-todo
+# Create a symlink to this at ~/.cargo/todo_config
+^\s*//\s*todo:.*
+^\s*//\s*fixme:.*
+^\s*//\s*do_not_commit.*

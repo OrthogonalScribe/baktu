@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Pre-commit hook to force a passing run of `cargo fmt` and disallow committing code that contains a
+# DO_NOT_COMMIT marker
+# - Symlink this in .git/hooks after cloning.
+# - Committing changes to this file will trigger the pre-commit hook, which can be skipped (after
+#   careful inspection of `git diff --cached | grep DO_NOT_COMMIT`) using `--no-verify`.
+# TODO: (C) consider a hook manager, e.g. https://pre-commit.com/
+
+exec 1>&2 # redirect output to stderr
+
+if ! cargo fmt -- --check ; then
+    echo "'cargo fmt' found issues - rejecting commit"
+    exit 1
+fi
+
+# Based on https://stackoverflow.com/questions/70750306/in-git-is-it-possible-to-specify-that-certain-changes-ought-never-be-committed/70763173#70763173
+if git diff --cached | grep DO_NOT_COMMIT >/dev/null; then
+    echo "DO_NOT_COMMIT found - rejecting commit"
+    exit 1
+fi
+
+exit 0

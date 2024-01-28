@@ -1,0 +1,41 @@
+# Testing Roadmap
+
+This page lists various test scenarios for `baktu`. Ideally most of these will be automated, but some might require manual testing. It is recommended to start with the ones that provide the best cost/benefit ratio.
+
+- handling of all valid filenames:
+    - newline-containing paths (e.g. `touch foo/line1$'\n'2$'\n'3.txt`)
+    - generally all valid bytes in a segment
+    - additionally, various combinations of those - consider fuzzing
+    - do this in:
+        - all possible places
+            - include and exclude files
+            - repo location
+            - site name
+            - source dataset
+            - others?
+        - all possible processes - `init`, `add-site`, `nsv-*`, `snap` subcommands
+- handling of extended attributes:
+    - all valid extended attribute data, in both keys (all bytes except `\0` valid) and values (all bytes are allowed)
+    - sizes up to the limits supported by Linux and ext4, as well as zero
+    - all namespaces
+- handling of:
+    - all file types
+        - special files
+            - block and character devices
+            - named pipes
+            - sockets
+        - directories
+            - of various "sizes" (number of children)
+        - regular files
+            - of various sizes (e.g. to test the deduplication threshold)
+        - symbolic links, all combinations of
+            - relative, absolute
+            - broken, working
+        - hard-links. Not a file type, but important to test nonetheless
+    - with all possible permission combinations
+        - including those that would result in e.g. `EACCES`
+    - with all possible inode attribute (`chattr`) combinations
+- handling of corrupted repositories
+- handling of paths that are too long
+    - both in the input data, and the resulting repository
+- handling of sparse files
