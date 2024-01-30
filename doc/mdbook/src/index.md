@@ -9,9 +9,7 @@ At the moment `baktu` is a work-in-progress proof of concept. It can currently c
 `baktu` is very much under development and not yet productized. Do not use it on any data that you have not backed up.
 </div>
 
-`baktu` is an [rsnapshot](https://rsnapshot.org/)-inspired backup tool. It features a [git](https://git-scm.com/)-inspired workflow, creates file-level-deduplicated snapshots of directories and stores them in repositories. It is a personal scratch-own-itch project driven by the following requirements:
-
-[TODO: re-enable link to https://github.com/OrthogonalScribe/baktu ]::
+[`baktu`](https://github.com/OrthogonalScribe/baktu) is an [rsnapshot](https://rsnapshot.org/)-inspired backup tool. It features a [git](https://git-scm.com/)-inspired workflow, creates file-level-deduplicated snapshots of directories and stores them in repositories. It is a personal scratch-own-itch project driven by the following requirements:
 
 * **Support "infinite" retention:** the main driver of some of the following features. `baktu` aims to minimize unnecessary storage costs to enable much longer backup repository lifetimes for scenarios where the amount of new data is relatively limited
     * **Minimize inode cost per snapshot:** [history intervals](repositories/v1/index.md#history-intervals) are used to make the inode cost per snapshot proportional to the number of files changed, instead of to the number of directories in the *source dataset* (the set of files and directories to be snapshotted). For source datasets with large numbers of directories, this significantly increases the number of snapshots that can be saved on ext4 file systems
