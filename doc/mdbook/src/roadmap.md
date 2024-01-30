@@ -33,7 +33,6 @@ Issues that need to be handled for acceptable usability in the [happy path](http
 
 * `S` old nom and cexpr versions cause deprecation warnings
     * caused by the `carlosgaldino/fuse-rs` dependency. Shortened from the git log: the `libfuse-sys`<-`bindgen`<-`cexpr`<-`nom^4` dep is too old, hitting the [trailing semicolon in macro used in expression position](https://github.com/rust-lang/rust/issues/79813) issue. Right now this emits warnings, but will become a hard error in the future. This is fixed in nom 5.1.3+ and 6.2.2+ by [rust-bakery/nom#1657](https://github.com/rust-bakery/nom/pull/1657).
-* `S` warnings introduced with new `rustc` version
 
 
 ## Usability issues
