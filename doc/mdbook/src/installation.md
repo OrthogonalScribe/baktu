@@ -5,7 +5,7 @@
 As `baktu` is still in the work-in-progress proof of concept stage, the only supported method of installation is building from source:
 
 ```console
-~/code$ git clone git@github.com:OrthogonalScribe/baktu.git
+~/code$ git clone https://github.com/OrthogonalScribe/baktu.git
 ~/code$ cd baktu
 ~/code/baktu$ cargo build
 ```
