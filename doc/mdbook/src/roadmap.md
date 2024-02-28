@@ -46,7 +46,6 @@ Issues that need to be handled for acceptable usability in the [happy path](http
 
 ## Documentation issues
 
-* `S` reproducible documentation build environment. A fresh setup resulted in a broken stock theme, in addition to the `pagetoc` plugin not working
 * `S` host code and documentation on baktu.net and mirror on one or more of the mainstream platforms
     * add appropriate GH topics to project
 * `S` consider using [cargo-msrv](https://github.com/foresterre/cargo-msrv)
