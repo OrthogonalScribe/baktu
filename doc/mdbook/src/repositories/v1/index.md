@@ -143,7 +143,7 @@ Future BRJ parser implementations might benefit from previous work on the record
 This encoding is a simple format that represents binary data in one of two tagged variants:
 * raw: the data as-is, prefixed by `r-<SIZE_IN_BYTES>␣` (with `␣` representing space, 0x20)
 * hex: lowercase-hex encoded, prefixed by `h␣`
-3
+
 Design notes:
 * It aims to be simple to parse and is used instead of a more conventional escaping scheme to reduce the risk of false negative searches due to interactions between escaping methods in the shell, search tool and searched format.
 * It includes the payload size in the raw variant to prevent confusion for users manually accessing data such as the raw encoding of the [*security.capability* extended attribute](https://www.mankier.com/7/capabilities#Description-File_capabilities) that can contain non-printable characters.

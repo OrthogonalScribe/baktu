@@ -8,6 +8,7 @@ The letters in front of some of the items are the [MoSCoW](https://en.wikipedia.
 Issues that need to be handled for this to be a [Minimum Viable Product](https://en.wikipedia.org/wiki/Minimum_viable_product) *for the author's own use*:
 
 * [ ] `M` appropriate handling of multiple include paths with the same basename
+* [ ] `M` appropriate handling of file access time changes due to `baktu` activity. Related issues in [restic](https://github.com/restic/restic/issues/53), [borg](https://github.com/borgbackup/borg/issues/4673). Strongly consider `O_NOATIME`, but also changing how (and if) we record and use the `atime` metadata, and interactions with `noatime`/`relatime` or even `atime` mounts
 * [ ] `M` code necessary to validate initial snapshot:
     * either FUSE mount + internal baktu metadata getters for where our Rust FUSE stack doesn't help, or fully internal baktu FS functions. Former option preferable if not too much overhead
     * directory tree diff program, existing one if it can handle the excludes, includes and full set of metadata we record *and* somehow interop with repo reading approach, or otherwise our own
