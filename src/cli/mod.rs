@@ -1,7 +1,5 @@
 //! Contains the argument handling and main logic of the CLI
 
-pub mod commands;
-
 use std::env::current_dir;
 use std::error::Error;
 use std::ffi::{c_char, CString, OsString};
@@ -116,12 +114,6 @@ enum Command {
 
 	/// Create a new snapshot within the current site
 	Snap(SnapArgs),
-
-	/// Mount the current snapshot directory via FUSE
-	Mount {
-		/// Path to the mount point at which to mount the snapshot directory
-		mount_point: PathBuf,
-	},
 }
 
 #[derive(Debug, Args)]
@@ -177,7 +169,6 @@ impl Baktu {
 			NsvAddTo { file, path } => nsv::append(&file, path.as_os_str().as_bytes())?,
 			NsvRmFrom { file, path } => nsv::filter_not(file, path.as_os_str().as_bytes())?,
 			Snap(args) => Self::snapshot(args)?,
-			Mount { mount_point } => commands::mount::exec(mount_point)?,
 		}
 
 		info!("process exiting successfully");
@@ -990,18 +981,6 @@ fn repo_site_or_die() -> io::Result<Site> {
 		)
 	};
 	Ok(Site(site_path.to_owned()))
-}
-
-fn repo_snap_or_die() -> io::Result<Snapshot> {
-	let cwd = current_dir()?;
-	let Some(snap_path) = cwd.ancestors().find(|p| Snapshot::is_valid(p)) else {
-		die(
-			USAGE,
-			"not in a baktu repository snapshot, exiting. `cd` into an existing one, or create one
-			via `baktu snap`",
-		)
-	};
-	Snapshot::try_from(snap_path.to_owned())
 }
 
 // TODO: (S) look into reorganizing code to only invoke die() in the CLI code
