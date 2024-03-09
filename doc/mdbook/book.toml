@@ -20,8 +20,10 @@ additional-js  = ["theme/pagetoc.js"]
 default-theme = "rust"
 preferred-dark-theme = "ayu"
 
-# TODO from https://rust-lang.github.io/mdBook/format/configuration/renderers.html#html-renderer-options
-#git-repository-url
+git-repository-url = "https://github.com/OrthogonalScribe/baktu"
+
+# Other relevant options if we start hosting on a different domain or platform, from
+# https://rust-lang.github.io/mdBook/format/configuration/renderers.html#html-renderer-options
 #git-repository-icon: fa-code-fork if not using GH
 #site-url
 #cname for GH pages
