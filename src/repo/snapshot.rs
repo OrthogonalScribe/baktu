@@ -1,6 +1,6 @@
 use std::{ffi::OsStr, fs::File, io::Read, os::unix::prelude::OsStrExt, path::PathBuf};
 
-use super::meta_file::MetaFile;
+use super::{meta_file::MetaFile, site};
 
 pub const META_NAME_FNAME: &str = "meta_name.cfg.bin";
 
@@ -15,6 +15,13 @@ impl Snapshot {
 		} else {
 			Self::try_from(path)
 		}
+	}
+
+	// XXX: sub-optimal situation with partial validity checks here and in try_from(). Ideally we'll
+	// want to have clear Snapshot states with clear verification criteria, while avoiding
+	// unnecessary validation where pragmatic.
+	pub fn is_valid<P: AsRef<std::path::Path>>(path: P) -> bool {
+		path.as_ref().is_dir() && path.as_ref().parent().is_some_and(site::is_snapshots_dir)
 	}
 
 	pub fn meta_files(&self) -> std::io::Result<impl Iterator<Item = walkdir::Result<MetaFile>>> {

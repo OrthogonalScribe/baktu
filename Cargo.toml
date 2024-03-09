@@ -18,6 +18,7 @@ caps = "0.5.5"
 clap = { version = "4.1.8", features = ["derive"] }
 env_logger = "0.10.0"
 exitcode = "1.1.2"
+fuse-rs = { git = "https://github.com/OrthogonalScribe/fuse-rs/", branch = "ver_bump" }
 ioctls = "0.6.1"
 libc = "0.2.141"
 linux-raw-sys = "0.3.1"

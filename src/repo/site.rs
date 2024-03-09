@@ -45,6 +45,14 @@ pub struct ExcludeCfg {
 	pub all_eacces: bool,
 }
 
+pub fn is_snapshots_dir<P: AsRef<Path>>(path: P) -> bool {
+	let path = path.as_ref();
+	path.is_dir()
+		&& path.file_name().is_some_and(|name| {
+			name == Site::SNAPSHOTS_DIR_NAME && path.parent().is_some_and(Site::is_valid)
+		})
+}
+
 #[derive(Debug)]
 pub struct Site(pub PathBuf);
 
