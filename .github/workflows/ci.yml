@@ -3,15 +3,19 @@ name: CI
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches:
+      - master
+      - "feature/**"
   pull_request:
-    branches: [ $default-branch ]
+    branches:
+      - master
+      - "feature/**"
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build+test:
+  build_test:
 
     runs-on: ubuntu-latest
 
