@@ -1,0 +1,75 @@
+# Based on https://github.com/rust-lang/mdBook/wiki/Automated-Deployment%3A-GitHub-Actions#using-deploy-via-actions
+name: Deploy docs
+
+on:
+  push:
+    branches: master
+
+jobs:
+
+  build+publish:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # To push a branch
+      pages: write  # To push to a GitHub Pages site
+      id-token: write # To update the deployment status
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # SOMEDAY: Log the latest known working versions for the tools below, in
+      # case future ones break the build
+
+      # TODO: see if we can DRY it up below
+      - name: Install latest mdbook
+        run: |
+          tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
+          url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir mdbook
+          curl -sSL $url | tar -xz --directory=./mdbook
+          echo `pwd`/mdbook >> $GITHUB_PATH
+
+      - name: Install latest mdbook-pagetoc
+        run: |
+          tag=$(curl 'https://api.github.com/repos/slowsage/mdbook-pagetoc/releases/latest' | jq -r '.tag_name')
+          url="https://github.com/slowsage/mdbook-pagetoc/releases/download/${tag}/mdbook-pagetoc-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir mdbook-pagetoc
+          curl -sSL $url | tar -xz --directory=./mdbook-pagetoc
+          echo `pwd`/mdbook-pagetoc >> $GITHUB_PATH
+
+      - name: Install latest mdbook-linkcheck
+        run: |
+          tag=$(curl 'https://api.github.com/repos/Michael-F-Bryan/mdbook-linkcheck/releases/latest' | jq -r '.tag_name')
+          # SOMEDAY: check if author would be okay with a PR to add the tag
+          #   name to the file name for consistency's sake
+          # SOMEDAY: same but releases in tar.gz format
+          archive_name=mdbook-linkcheck.x86_64-unknown-linux-gnu.zip
+          url="https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/download/${tag}/$archive_name"
+          wget $url
+          mkdir mdbook-linkcheck
+          unzip $archive_name -d mdbook-linkcheck
+          chmod +x mdbook-linkcheck/mdbook-linkcheck
+          echo `pwd`/mdbook-linkcheck >> $GITHUB_PATH
+
+      - name: Build Book
+        run: |
+          cd doc/mdbook/
+          mdbook build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          # Upload entire repository
+          # TODO: see if we can DRY up the path
+          path: 'doc/mdbook/book/html'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.4
