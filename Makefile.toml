@@ -1,0 +1,41 @@
+# Based on
+# - https://github.com/sagiegurari/cargo-make/blob/a04f7cc874363cff5ae6f60063e71240fecffebc/README.md?plain=1#L194
+# - https://medium.com/@sagiegurari/automating-your-rust-workflows-with-cargo-make-part-5-final-predefined-tasks-ci-support-and-4594812e57da and previous
+
+[tasks.pre-build]
+description = "Run Clippy before the build"
+dependencies = ["clippy"]
+
+[tasks.post-build]
+description = "Build the xattr helper after the Rust build"
+dependencies = ["build-xattr-helper"]
+
+[tasks.build-xattr-helper]
+description = "Build the xattr helper"
+install_script = '''
+echo "Running tasks.build-xattr-helper.install_script:"
+echo -n "- Checking for libcap-dev: "
+if [ ! "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+	echo >&2 "The install script supports only Debian-based platforms at the moment, exiting."
+	exit 1
+else
+	if [ ! "$(dpkg -l libcap-dev 2>&1 | grep ^ii >/dev/null)" ]; then
+		echo "not installed"
+		echo "- Installing libcap-dev..."
+		sudo apt-get update || true
+		sudo apt-get install -y libcap-dev
+	else
+		echo "installed"
+	fi
+fi
+'''
+command = "make"
+args = ["-C", "xattr-helper"]
+
+[tasks.clean]
+dependencies = ["clean-xattr-helper"]
+
+[tasks.clean-xattr-helper]
+description = "Cleans the xattr-helper subproject"
+command = "make"
+args = ["-C", "xattr-helper", "clean"]

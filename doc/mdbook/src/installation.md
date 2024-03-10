@@ -2,29 +2,40 @@
 
 ## Building from source
 
-As `baktu` is still in the work-in-progress proof of concept stage, the only supported method of installation is building from source:
+As `baktu` is still in the work-in-progress proof of concept stage, the only supported method of installation is building from source. First, we need to install [cargo-make](https://github.com/sagiegurari/cargo-make):
+
+```console
+$ cargo install cargo-make
+```
+
+And then we can clone and build:
 
 ```console
 ~/code$ git clone https://github.com/OrthogonalScribe/baktu.git
 ~/code$ cd baktu
-~/code/baktu$ cargo build
+~/code/baktu$ cargo make
 ```
 
-[FIXME: ensure clone command works once the repository is uploaded]::
+This will run a modified `cargo make` flow, including:
+- `rustfmt`,
+- `clippy`,
+- building the main `baktu` executable,
+- building the extended attribute helper (see below)
+    - installing `libcap-dev`. The script to do this supports only Debian-based distributions at the moment, so in other environments it needs to be modified accordingly
+    - permitting the binary to acquire the `CAP_SYS_ADMIN` capability
+- running tests
 
-This will build the main `baktu` executable. However, to properly record extended attributes, including those in the `trusted` namespace, we need the `CAP_SYS_ADMIN` capability. `baktu` provides two ways of achieving that - permitting the entire `baktu` executable to acquire the capability, or giving the permission to a helper executable with a much smaller trusted code base.
+
+### Setting up extended attribute recording
+
+To properly record extended attributes, including those in the `trusted` namespace, we need the `CAP_SYS_ADMIN` capability. `baktu` provides two ways of achieving that - permitting the entire `baktu` executable to acquire the capability, or giving the permission to a helper executable with a much smaller trusted code base.
 
 
-### Building the extended attributes helper
+#### Option 1: Setting up `get-all-xattrs`
 
-```console
-~/code/baktu$ cd xattr-helper/
-~/code/baktu/xattr-helper$ make
-```
+The `cargo make` invocation builds the helper for us, however the produced executable will still need to be in our `PATH` while running `baktu`.
 
-This will build the helper and attempt (via `sudo`) to permit it to acquire the `CAP_SYS_ADMIN` capability. We can confirm the result by running `getcap get-xattr-helper`. The produced executable will need to be in our `PATH` while running `baktu`.
-
-If the helper is necessary (see below) and can not be found in the `PATH`, `baktu snap` in a properly set up repository (see [Quick Start](quick-start.md)) will exit with an error:
+If the helper is necessary (see the other alternative below) and can not be found in the `PATH`, `baktu snap` in a properly set up repository (see [Quick Start](quick-start.md)) will exit with an error:
 
 ```console
 ~/b2demo/bak/sites/desktop$ baktu snap --dry-run
@@ -32,8 +43,7 @@ If the helper is necessary (see below) and can not be found in the `PATH`, `bakt
 ~/b2demo/bak/sites/desktop$
 ```
 
-
-### Giving CAP_SYS_ADMIN directly to `baktu`
+#### Option 2: Giving `CAP_SYS_ADMIN` directly to `baktu`
 
 Alternatively, we can permit the main `baktu` executable to acquire the capability, which will result in a slight speedup and free us from the `PATH` requirements, at the cost of allowing a much more heterogenous code dependency tree to acquire what are effectively administrator privileges.
 
@@ -41,10 +51,10 @@ Alternatively, we can permit the main `baktu` executable to acquire the capabili
 sudo setcap cap_sys_admin=p target/debug/baktu
 ```
 
-We can confirm the result by running `getcap target/debug/baktu`.
+We can confirm the result by running `getcap target/debug/baktu` (note that the path needs to be adjusted accordingly for release builds).
 
 
-### Extended attribute mode logging
+#### Finding out which method is used
 
 `baktu snap` reports when it's using the helper for extended attribute fetching:
 
@@ -57,7 +67,7 @@ We can confirm the result by running `getcap target/debug/baktu`.
 If the `baktu` executable itself is permitted to acquire the capability, it will do so when needed and log it at the `TRACE` level, which can be seen via a command like `baktu snap --dry-run -vvv 2>&1 | grep CAP_SYS_ADMIN`
 
 
-## Setting up development environment
+## Setting up the development environment
 
 The `baktu` project uses a few additional tools during development. Setting those up is described below.
 
