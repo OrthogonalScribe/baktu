@@ -14,8 +14,11 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+  # Make sure CI fails on all warnings, including Clippy lints
+  RUSTFLAGS: "-Dwarnings"
+
 jobs:
-  build_test:
+  build_test_fmt_lint:
 
     runs-on: ubuntu-latest
 
@@ -25,3 +28,9 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: Run Rustfmt
+      # see https://github.com/rust-lang/rustfmt#checking-style-on-a-ci-server
+      run: cargo fmt --all -- --check
+    - name: Run Clippy
+      # see https://doc.rust-lang.org/clippy/continuous_integration/github_actions.html
+      run: cargo clippy --all-targets --all-features
