@@ -32,7 +32,7 @@ Issues that need to be handled for acceptable usability in the [happy path](http
 
 ## Build issues
 
-* `S` old nom and cexpr versions cause deprecation warnings
+* `S` (FUSE-only) old nom and cexpr versions cause deprecation warnings
     * caused by the `carlosgaldino/fuse-rs` dependency. Shortened from the git log: the `libfuse-sys`<-`bindgen`<-`cexpr`<-`nom^4` dep is too old, hitting the [trailing semicolon in macro used in expression position](https://github.com/rust-lang/rust/issues/79813) issue. Right now this emits warnings, but will become a hard error in the future. This is fixed in nom 5.1.3+ and 6.2.2+ by [rust-bakery/nom#1657](https://github.com/rust-bakery/nom/pull/1657).
 
 
@@ -47,6 +47,13 @@ Issues that need to be handled for acceptable usability in the [happy path](http
 
 ## Documentation issues
 
+* `S` create integration test for [Quick Start](quick-start.md) scenario
+    * `C` attempt to use the documentation itself as a test case
+        * possibly with `trycmd` if [issue #105](https://github.com/assert-rs/trycmd/issues/105)
+            ([reddit](https://reddit.com/r/rust/comments/xvlo5w/trycmd_just_ignores_my_tests/))
+            isn't a problem
+        * [term-transcript](https://docs.rs/term-transcript/0.3.0/term_transcript/test/index.html)
+        is another candidate
 * `S` host code and documentation on baktu.net and mirror on one or more of the mainstream platforms
     * add appropriate GH topics to project
 * `S` consider using [cargo-msrv](https://github.com/foresterre/cargo-msrv)
@@ -75,8 +82,7 @@ Concerns and ideas that can be handled at a later time:
         * might be a non-issue, considering each instance of a file in a history interval is equivalent to a hard-link (same meta/data). Might even work for directories with most tools, since it shouldn't introduce loops
 * `C` explore possible FUSE performance optimizations based on the [FAST'17 paper](https://www.usenix.org/conference/fast17/technical-sessions/presentation/vangoor) from [FSL], read splicing via `read_buf()` for starters
 * `S` automated testing
-    * [assert_cmd](https://github.com/assert-rs/assert_cmd), [trycmd](https://github.com/assert-rs/trycmd) for CLI
-    * [assert_fs](https://github.com/assert-rs/assert_fs) and [dir-diff](https://github.com/assert-rs/dir-diff) as starting points for filesystem-related tests
+    * [dir-diff](https://github.com/assert-rs/dir-diff), [snapbox](https://github.com/assert-rs/trycmd/tree/main/crates/snapbox) and [others](https://docs.rs/snapbox/latest/snapbox/#which-tool-is-right) might help with filesystem-related tests
     * ideally documentation code testing too, especially for all versions of [Data Access with Standard Unix Tools](repositories/v1/access-with-unix-tools.md)
 * `C` investigate possible usability issues due to spurious `statx()` metadata changes (e.g. `mnt_id` or other filesystem-related changes that do not affect the source dataset)
 * `C` consider interface to snapshotting utilities, c.f. [`rsnapshot` and LVM](https://www.mankier.com/1/rsnapshot#Configuration-linux_lvm_cmd_lvcreate)
@@ -98,7 +104,6 @@ Concerns and ideas that can be handled at a later time:
     * resolve limitations of `libfuse` and the kernel side code
         * check existing work, such as [Miklos Szeredi's Aug 2023 statx patch to fuse](https://lwn.net/Articles/941067/)
 * `S` prune dependencies that are no longer needed
-* `C` consider also using something like [term-transcript](https://github.com/slowli/term-transcript) for the documentation, and maybe tests
 * `C` consider publishing to crates.io
 * `C` consider further hardening:
     * of both the main executable, and the helper
