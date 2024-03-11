@@ -37,6 +37,9 @@ git-repository-url = "https://github.com/OrthogonalScribe/baktu"
 # Currently makes the build take 90 seconds the first time
 follow-web-links = true
 
+# Gives a 403 Forbidden when requested from GitHub runners
+exclude = [ 'reddit\.com' ]
+
 # The User-Agent to use when sending web requests
 user-agent = "mdbook-linkcheck-0.4.0"
 
