@@ -8,7 +8,7 @@ The letters in front of some of the items are the [MoSCoW](https://en.wikipedia.
 Issues that need to be handled for this to be a [Minimum Viable Product](https://en.wikipedia.org/wiki/Minimum_viable_product) *for the author's own use*:
 
 * [ ] `M` appropriate handling of multiple include paths with the same basename
-* [ ] `M` appropriate handling of file access time changes due to `baktu` activity. Related issues in [restic](https://github.com/restic/restic/issues/53), [borg](https://github.com/borgbackup/borg/issues/4673). Strongly consider `O_NOATIME`, but also changing how (and if) we record and use the `atime` metadata, and interactions with `noatime`/`relatime` or even `atime` mounts
+* [ ] `M` appropriate handling of file access time changes due to `baktu` activity, and updated file access times possibly resulting in large metadata deltas. Related `restic` [issue](https://github.com/restic/restic/issues/53) and [docs](https://restic.readthedocs.io/en/v0.16.4/040_backup.html#backing-up-special-items-and-metadata), [borg issue](https://github.com/borgbackup/borg/issues/4673). Strongly consider `O_NOATIME` (see also [this book](https://github.com/posborne/rust-systems-programming/blob/master/file-io.md) and [custom flags in RFC 1251](https://rust-lang.github.io/rfcs/1252-open-options.html#custom-flags)), but also changing how (and if) we record and use the `atime` metadata, and interactions with `noatime`/`relatime` or even `atime` mounts
 * [ ] `M` code necessary to validate initial snapshot:
     * either FUSE mount + internal baktu metadata getters for where our Rust FUSE stack doesn't help, or fully internal baktu FS functions. Former option preferable if not too much overhead
     * directory tree diff program, existing one if it can handle the excludes, includes and full set of metadata we record *and* somehow interop with repo reading approach, or otherwise our own
@@ -34,7 +34,9 @@ Issues that need to be handled for acceptable usability in the [happy path](http
 
 * `S` (FUSE-only) old nom and cexpr versions cause deprecation warnings
     * caused by the `carlosgaldino/fuse-rs` dependency. Shortened from the git log: the `libfuse-sys`<-`bindgen`<-`cexpr`<-`nom^4` dep is too old, hitting the [trailing semicolon in macro used in expression position](https://github.com/rust-lang/rust/issues/79813) issue. Right now this emits warnings, but will become a hard error in the future. This is fixed in nom 5.1.3+ and 6.2.2+ by [rust-bakery/nom#1657](https://github.com/rust-bakery/nom/pull/1657).
-
+* `C` CI: consider integrating [Dependabot](https://docs.github.com/en/code-security/dependabot), [Mend Renovate](https://www.mend.io/renovate/) for
+    * `baktu` itself
+    * the [GitHub Actions](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot) used
 
 ## Usability issues
 
